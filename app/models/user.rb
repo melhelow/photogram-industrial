@@ -27,6 +27,8 @@
 #  index_users_on_username              (username) UNIQUE
 #
 class User < ApplicationRecord
+  has_many :own_photos, class_name: "Photo", foreign_key: "owner_id"
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
