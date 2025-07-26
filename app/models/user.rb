@@ -11,7 +11,7 @@
 #  likes_count            :integer          default(0)
 #  name                   :string
 #  photos_count           :integer          default(0)
-#  private                :boolean
+#  private                :boolean          default(TRUE)
 #  remember_created_at    :datetime
 #  reset_password_sent_at :datetime
 #  reset_password_token   :string
@@ -46,6 +46,9 @@ class User < ApplicationRecord
   has_many :leaders, through: :accepted_sent_follow_requests, source: :recipient
   has_many :leaders, through: :accepted_received_follow_requests, source: :sender
 
-  has_many :feed, throught: :leaders, source: :own_photos
-  has_many :discover, throught: :leaders, source: :liked_photos
+has_many :feed, through: :leaders, source: :own_photos
+has_many :discover, through: :leaders, source: :liked_photos
+
+validates :username, presence: true, uniqueness: true
+
 end
