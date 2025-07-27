@@ -1,0 +1,25 @@
+<h1 class="mb-4"><%= @user.username %>'s Liked Photos</h1>
+
+<% if @liked_photos.any? %>
+  <div class="row">
+    <% @liked_photos.each do |photo| %>
+      <div class="col-md-4 mb-4">
+        <div class="card">
+          <% if photo.image.attached? %>
+            <%= image_tag photo.image, class: "card-img-top" %>
+          <% end %>
+          <div class="card-body">
+            <p class="card-text"><%= photo.caption %></p>
+            <small class="text-muted">
+              Posted by <%= link_to photo.owner.username, user_path(photo.owner.username) %>
+            </small>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <div class="alert alert-info">
+    <%= @user.username %> hasn't liked any photos yet.
+  </div>
+<% end %>

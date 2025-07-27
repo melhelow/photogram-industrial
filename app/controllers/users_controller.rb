@@ -1,7 +1,27 @@
 class UsersController < ApplicationController
+  before_action :find_user, only: [:show, :liked, :feed, :discover]
 
   def show
-      @user = User.find_by!(username: params.fetch(:id))
   end
 
+  def liked
+    @liked_photos = @user.liked_photos.includes(:owner)
+  end
+
+  def feed
+    # You can use something like this if your model has it:
+    @feed_photos = @user.feed
+  end
+
+  def discover
+    # You can use something like this if your model has it:
+    @discover_photos = @user.discover
+  end
+
+  private
+
+  def find_user
+    @user = User.find_by(username: params[:username])
+    redirect_to root_path, alert: "User not found" unless @user
+  end
 end
