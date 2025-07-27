@@ -15,7 +15,8 @@ class UsersController < ApplicationController
 
   def discover
     # You can use something like this if your model has it:
-    @discover_photos = @user.discover
+    @photos = current_user.discover.order(created_at: :desc)
+
   end
 
   private

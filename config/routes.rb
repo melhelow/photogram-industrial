@@ -5,7 +5,9 @@ Rails.application.routes.draw do
   resources :likes
   resources :follow_requests
   resources :comments
-  resources :photos
+  resources :photos do
+  resources :likes, only: [:create, :destroy]
+  end
   
   # Custom user routes - must come AFTER resources :photos
   get ":username" => "users#show", as: :user, constraints: { username: /[a-zA-Z0-9_]+/ }

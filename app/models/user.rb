@@ -48,9 +48,11 @@ class User < ApplicationRecord
   # Follow Requests
   has_many :sent_follow_requests, foreign_key: :sender_id, class_name: "FollowRequest"
   has_many :accepted_sent_follow_requests, -> { accepted }, foreign_key: :sender_id, class_name: "FollowRequest"
+  has_many :pending_sent_follow_requests, -> { pending }, foreign_key: :sender_id, class_name: "FollowRequest"
 
   has_many :received_follow_requests, foreign_key: :recipient_id, class_name: "FollowRequest"
   has_many :accepted_received_follow_requests, -> { accepted }, foreign_key: :recipient_id, class_name: "FollowRequest"
+  has_many :pending_received_follow_requests, -> { pending }, foreign_key: :recipient_id, class_name: "FollowRequest"
 
   # Followers and Following (Leaders)
   has_many :leaders, through: :accepted_sent_follow_requests, source: :recipient
@@ -66,4 +68,10 @@ class User < ApplicationRecord
   # Scopes
   scope :past_week, -> { where(created_at: 1.week.ago...) }
   scope :by_likes, -> { order(likes_count: :desc) }
+
+  # Returns users this user has sent pending follow requests to
+def pending
+  pending_sent_follow_requests.map(&:recipient)
+end
+
 end

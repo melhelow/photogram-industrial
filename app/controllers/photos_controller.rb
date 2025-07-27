@@ -20,19 +20,17 @@ class PhotosController < ApplicationController
   end
 
   # POST /photos or /photos.json
-  def create
-    @photo = Photo.new(photo_params)
+def create
+  @photo = Photo.new(photo_params)
+  @photo.owner = current_user  # <-- assign owner here
 
-    respond_to do |format|
-      if @photo.save
-        format.html { redirect_to @photo, notice: "Photo was successfully created." }
-        format.json { render :show, status: :created, location: @photo }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @photo.errors, status: :unprocessable_entity }
-      end
-    end
+  if @photo.save
+    redirect_to @photo, notice: "Photo was successfully created."
+  else
+    render :new
   end
+end
+
 
   # PATCH/PUT /photos/1 or /photos/1.json
   def update

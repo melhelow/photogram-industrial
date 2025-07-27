@@ -1,27 +1,26 @@
-# == Schema Information
-#
-# Table name: follow_requests
-#
-#  id           :bigint           not null, primary key
-#  status       :string           default("pending")
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
-#  recipient_id :bigint           not null
-#  sender_id    :bigint           not null
-#
-# Indexes
-#
-#  index_follow_requests_on_recipient_id  (recipient_id)
-#  index_follow_requests_on_sender_id     (sender_id)
-#
-# Foreign Keys
-#
-#  fk_rails_...  (recipient_id => users.id)
-#  fk_rails_...  (sender_id => users.id)
-#
 class FollowRequest < ApplicationRecord
-  belongs_to :recipient, class_name: "User"
-  belongs_to :sender, class_name: "User"
+  # Possible status values: 'pending', 'accepted', 'rejected' (adjust as needed)
+  
+  # Scopes
+  scope :pending, -> { where(status: 'pending') }
+  scope :accepted, -> { where(status: 'accepted') }
 
-  enum :status, { pending: "pending", rejected: "rejected", accepted: "accepted" }
+  # Associations
+  belongs_to :sender, class_name: "User"
+  belongs_to :recipient, class_name: "User"
+
+   def pending?
+    status == 'pending'
+  end
+
+  def accepted?
+    status == 'accepted'
+  end
+
+  def rejected?
+    status == 'rejected'
+  end
+
+  
+  # Validations, enums, or other logic here if needed
 end

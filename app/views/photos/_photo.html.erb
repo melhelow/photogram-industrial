@@ -1,12 +1,22 @@
-
 <div class="row mb-4">
   <div class="col-md-6 offset-md-3">
     <div class="card">
       <%= image_tag photo.image_url, class: "card-img-top" %>
+      
       <div class="card-body">
         <h5 class="card-title"><%= photo.owner.username %></h5>
         <p class="card-text"><%= photo.caption %></p>
+
+        <!-- ✅ Like / Unlike buttons -->
+        <% if photo.liked_by?(current_user) %>
+          <%= button_to "Un-like", photo_like_path(photo, current_user.likes.find_by(photo: photo)), method: :delete, class: "btn btn-outline-danger btn-sm me-2" %>
+        <% else %>
+          <%= button_to "Like", photo_likes_path(photo), method: :post, class: "btn btn-outline-primary btn-sm me-2" %>
+        <% end %>
+        <span class="text-muted"><%= pluralize(photo.likes.count, "like") %></span>
+        <!-- End Like section -->
       </div>
+
       <ul class="list-group list-group-flush">
         <% photo.comments.each do |comment| %>
           <li class="list-group-item">
@@ -22,6 +32,7 @@
           </li>
         <% end %>
       </ul>
+
       <div class="card-body">
         <%= render "comments/form", comment: photo.comments.build %>
       </div>

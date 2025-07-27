@@ -8,7 +8,8 @@
 
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
-
+     <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
     <%= render "shared/cdn_assets" %>
 
     <%# Includes all stylesheet files in app/assets/stylesheets %>
