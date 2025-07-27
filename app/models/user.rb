@@ -26,37 +26,44 @@
 #  index_users_on_reset_password_token  (reset_password_token) UNIQUE
 #  index_users_on_username              (username) UNIQUE
 #
-class User < ApplicationRecord
-  has_many :own_photos, class_name: "Photo", foreign_key: "owner_id"
 
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
+class User < ApplicationRecord
+  # Include default Devise modules
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  has_many :comments , foreign_key: :author_id 
-  
+  # Avatar uploader (CarrierWave)
+  mount_uploader :avatar_image, ImageUploader
+
+  # Photos
+  has_many :own_photos, foreign_key: :owner_id, class_name: "Photo"
+
+  # Comments
+  has_many :comments, foreign_key: :author_id
+
+  # Likes
+  has_many :likes, foreign_key: :fan_id
+  has_many :liked_photos, through: :likes, source: :photo
+
+  # Follow Requests
   has_many :sent_follow_requests, foreign_key: :sender_id, class_name: "FollowRequest"
-  has_many :accepted_follow_requests, -> { accepted }, foreign_key: :sender_id, class_name: "FollowRequest"
+  has_many :accepted_sent_follow_requests, -> { accepted }, foreign_key: :sender_id, class_name: "FollowRequest"
 
   has_many :received_follow_requests, foreign_key: :recipient_id, class_name: "FollowRequest"
- 
   has_many :accepted_received_follow_requests, -> { accepted }, foreign_key: :recipient_id, class_name: "FollowRequest"
 
-  has_many :likes, foreign_key: :fan_id
-  
-  has_many :own_photos, foreign_key: :owner_id, class_name: "Photo"
-  has_many :liked_photos, through: :likes, source: :photo
+  # Followers and Following (Leaders)
   has_many :leaders, through: :accepted_sent_follow_requests, source: :recipient
-  has_many :leaders, through: :accepted_received_follow_requests, source: :sender
+  has_many :followers, through: :accepted_received_follow_requests, source: :sender
 
-has_many :feed, through: :leaders, source: :own_photos
+  # Feed and Discover
+  has_many :feed, through: :leaders, source: :own_photos
+  has_many :discover, through: :leaders, source: :liked_photos
 
-has_many :discover, through: :leaders, source: :liked_photos
+  # Validations
+  validates :username, presence: true, uniqueness: true
 
-validates :username, presence: true, uniqueness: true
-
-scope :past_week, -> { where(created_at: 1.week.ago...) }
-scope :by_likes, -> { order(likes_count: :desc) }
-
+  # Scopes
+  scope :past_week, -> { where(created_at: 1.week.ago...) }
+  scope :by_likes, -> { order(likes_count: :desc) }
 end
