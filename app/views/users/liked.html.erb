@@ -1,17 +1,12 @@
-<div class="row">
-  <div class="col-md-6 offset-3">
-    <h1>
-      <%= @user.username %>
-    </h1>
+<div class="row mb-4">
+  <div class="col-md-6 offset-md-3">
+    <%= render "users/user", user: @user %>
+  </div>
+</div>
 
-    <ul class="nav nav-pills nav-justified">
-      <li class="nav-item">
-        <%= link_to "Posts", user_path(@user.username), class: "nav-link" %>
-      </li>
-      <li class="nav-item">
-        <%= link_to "Liked photos", liked_path(@user.username), class: "nav-link" %>
-      </li>
-    </ul>
+<div class="row mb-2">
+  <div class="col-md-6 offset-md-3">
+    <%= render "users/profile_nav", user: @user %>
   </div>
 </div>
 
