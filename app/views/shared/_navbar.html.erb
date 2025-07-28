@@ -1,57 +1,144 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
-
+<!--<nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
   <div class="container">
-  
-  <%= link_to 'Photogram', root_path , class: "navbar-brand" %>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+    <%#= link_to "Photogram (Industrial)", root_path, class: "navbar-brand" %>-->
+<!--
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
-   
-      <li class="nav-item dropdown">
-  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false">
-    Resources
-  </a>
-  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-    <a class="dropdown-item" href="/photos">Photos</a>
-    <a class="dropdown-item" href="/comments">Comments</a>
-    <a class="dropdown-item" href="/follow_requests">Follow Requests</a>
-    <a class="dropdown-item" href="/likes">Likes</a>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto">
+        <%# if user_signed_in? %>-->
+<!--          <li class="nav-item">-->
+            <%#= link_to feed_path(current_user.username), class: "nav-link" do %>
+<!--              <i class="fas fa-users fa-fw"></i></i>
+
+              Feed
+            <%# end %>-->
+<!--          </li>
+          <li class="nav-item">
+            <%#= link_to discover_path(current_user.username), class: "nav-link" do %>-->
+<!--              <i class="fas fa-compass fa-fw"></i>
+
+              Discover 
+            <%# end %>-->
+<!--          </li>-->
+        <%# end %>
+<!--      </ul>
+
+      <ul class="navbar-nav ms-auto">
+        <%# if user_signed_in? %>-->
+<!--          <li class="nav-item">-->
+            <%#= link_to new_photo_path, class: "nav-link" do %>
+<!--              <i class="fas fa-plus-circle"></i>
+
+              Add post
+            <%# end %>-->
+<!--          </li>
+          <li class="nav-item">
+            <%#= link_to user_path(current_user.username), class: "nav-link" do %>-->
+<!--              <i class="fas fa-home fa-fw"></i>
+
+              Your profile
+            <%# end %>-->
+<!--          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <%#= current_user.username %>-->
+<!--            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <%#= link_to "Edit profile", edit_user_registration_path, class: "dropdown-item" %>-->
+              <%#= link_to "Sign out", destroy_user_session_path, method: :delete, class: "dropdown-item" %>
+<!--            </div>
+          </li>
+        <%# else %>-->
+<!--          <li class="nav-item">-->
+            <%#= link_to "Sign in", new_user_session_path, class: "nav-link" %>
+<!--          </li>
+
+          <li class="nav-item">
+            <%#= link_to "Sign up", new_user_registration_path, class: "nav-link" %>-->
+<!--          </li>-->
+        <%# end %>
+<!--      </ul>
+    </div>
   </div>
-</li>
+</nav>
+-->
+<nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+  <div class="container">
+    <%= link_to "Photogram (Industrial)", root_path, class: "navbar-brand" %>
 
-      
- </ul>
-    <ul class="navbar-nav ">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-    <% if  user_signed_in? %>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto">
+        <% if user_signed_in? %>
+          <li class="nav-item">
+            <%= link_to feed_path(current_user.username), class: "nav-link" do %>
+              <i class="fas fa-users fa-fw"></i>
+              Feed
+            <% end %>
+          </li>
+          <li class="nav-item">
+            <%= link_to discover_path(current_user.username), class: "nav-link" do %>
+              <i class="fas fa-compass fa-fw"></i>
+              Discover 
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
 
-
-      <li class="nav-item">
-       <%= link_to "Edit #{current_user.username}", edit_user_registration_path, class: "nav-link" %>
-      </li>
-
-       <li class="nav-item">
-       <%= link_to "Sign out", destroy_user_session_path, method: :delete, class: "nav-link" %>
-      </li>
-
-        <% else %>
-       <li class="nav-item">
-       <%= link_to "Sign in", new_user_session_path, class: "nav-link" %>
-      </li>
-       <li class="nav-item">
-       <%= link_to "Sign up", new_user_registration_path, class: "nav-link" %>
-      </li>
-       
+      <% if user_signed_in? %>
+        <%= form_with(url: users_path, 
+             method: :get, 
+             class: "d-flex", 
+             id: "user_search") do |form| %>
+  <%= form.label :q_username_cont, "Search users", class: "visually-hidden" %>
+  <%= form.search_field :q_username_cont, 
+                       class: "form-control me-2",
+                       placeholder: "Search users...",
+                       value: params.dig(:q, :username_cont) %>
+  <%= form.button type: :submit, class: "btn btn-outline-success" do %>
+    <i class="fas fa-search"></i>
+  <% end %>
+<% end %>
       <% end %>
 
-    <ul>
-    
-    </ul>
-   
+      <ul class="navbar-nav ms-auto">
+        <% if user_signed_in? %>
+          <li class="nav-item">
+            <%= link_to new_photo_path, class: "nav-link" do %>
+              <i class="fas fa-plus-circle"></i>
+              Add post
+            <% end %>
+          </li>
+          <li class="nav-item">
+            <%= link_to user_path(current_user.username), class: "nav-link" do %>
+              <i class="fas fa-home fa-fw"></i>
+              Your profile
+            <% end %>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <%= current_user.username %>
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <%= link_to "Edit profile", edit_user_registration_path, class: "dropdown-item" %>
+<%= link_to "Sign out", destroy_user_session_path, method: :delete, class: "dropdown-item" %>
+            </div>
+          </li>
+        <% else %>
+          <li class="nav-item">
+            <%= link_to "Sign in", new_user_session_path, class: "nav-link" %>
+          </li>
+          <li class="nav-item">
+            <%= link_to "Sign up", new_user_registration_path, class: "nav-link" %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
   </div>
-  
-  </div>  
 </nav>

@@ -1,5 +1,5 @@
 class PhotosController < ApplicationController
-  before_action :set_photo, only: %i[ show edit update destroy ]
+    before_action :set_photo, only: %i[ show edit update destroy ]
 
   # GET /photos or /photos.json
   def index
@@ -8,6 +8,7 @@ class PhotosController < ApplicationController
 
   # GET /photos/1 or /photos/1.json
   def show
+    @user = @photo.owner
   end
 
   # GET /photos/new
@@ -17,22 +18,21 @@ class PhotosController < ApplicationController
 
   # GET /photos/1/edit
   def edit
+    @user = @photo.owner
   end
 
   # POST /photos or /photos.json
-  def create
-    @photo = Photo.new(photo_params)
+def create
+  @photo = Photo.new(photo_params)
+  @photo.owner = current_user  # <-- assign owner here
 
-    respond_to do |format|
-      if @photo.save
-        format.html { redirect_to @photo, notice: "Photo was successfully created." }
-        format.json { render :show, status: :created, location: @photo }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @photo.errors, status: :unprocessable_entity }
-      end
-    end
+  if @photo.save
+    redirect_to @photo, notice: "Photo was successfully created."
+  else
+    render :new
   end
+end
+
 
   # PATCH/PUT /photos/1 or /photos/1.json
   def update
@@ -57,14 +57,22 @@ class PhotosController < ApplicationController
     end
   end
 
+  def liked
+    @user = User.find_by!(username: params.fetch(:username))
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
-    def set_photo
-      @photo = Photo.find(params.expect(:id))
-    end
+     def set_photo
+    # pulls the :id out of params (as a String) and finds the Photo
+    @photo = Photo.find(params[:id])
+  end
 
     # Only allow a list of trusted parameters through.
-    def photo_params
-      params.expect(photo: [ :image, :comments_count, :likes_count, :caption, :owner_id ])
-    end
+     def photo_params
+    # require the top‐level :photo key, and then permit the individual attributes
+    params
+      .require(:photo)
+      .permit(:image, :comments_count, :likes_count, :caption, :owner_id)
+  end
 end

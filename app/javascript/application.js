@@ -1,13 +1,11 @@
-// Configure your import map in config/importmap.rb. Read more: https://github.com/rails/importmap-rails
+// Ensure these are imported
+import "@rails/ujs"
 import "@hotwired/turbo-rails"
-import "controllers"
 
-// Change to true to allow Turbo
-Turbo.session.drive = false
-
-// Allow UJS alongside Turbo
-import jquery from "jquery";
-window.jQuery = jquery;
-window.$ = jquery;
-import Rails from "@rails/ujs"
-Rails.start();
+// Add manual CSRF handling
+document.addEventListener("DOMContentLoaded", function() {
+  document.addEventListener("ajax:beforeSend", function(event) {
+    const token = document.querySelector("meta[name='csrf-token']").content;
+    event.detail[0].setRequestHeader("X-CSRF-Token", token);
+  });
+});

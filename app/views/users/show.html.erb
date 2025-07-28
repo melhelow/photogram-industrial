@@ -1,41 +1,28 @@
-<!-- app/views/users/show.html.erb -->
+<% if @pending_follow_requests.present? %>
+  <div class="alert alert-warning">
+    <h2>Pending Follow Requests:</h2>
+    <ul>
+      <% @pending_follow_requests.each do |req| %>
+        <li><%= req.sender.username %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
 
-<h1><%= @user.username %></h1>
 
-<h2>Own photos</h2>
+
+<div class="row mb-4">
+  <div class="col-md-6 offset-md-3">
+    <%= render "users/user", user: @user %>
+  </div>
+</div>
+
+<div class="row mb-2">
+  <div class="col-md-6 offset-md-3">
+    <%= render "users/profile_nav", user: @user %>
+  </div>
+</div>
 
 <% @user.own_photos.each do |photo| %>
-  <div class="row mb-4">
-    <div class="col-md-6 offset-md-3">
-      <div class="card">
-        <%= image_tag photo.image_url, class: "card-img-top" %>
-        <div class="card-body">
-          <h5 class="card-title"><%= photo.owner.username %></h5>
-          <p class="card-text"><%= photo.caption %></p>
-        </div>
-        <ul class="list-group list-group-flush">
-          <% photo.comments.each do |comment| %>
-            <li class="list-group-item">
-              <div class="media">
-                <div class="d-flex align-items-center">
-                  <% if comment.author.avatar_image.present? %>
-                    <%= image_tag comment.author.avatar_image.url, class: "rounded-circle mr-3", style: "width: 36px; height: 36px;" %>
-                  <% else %>
-                    <%= image_tag "default_avatar.png", class: "rounded-circle mr-3", style: "width: 36px; height: 36px;" %>
-                  <% end %>
-                  <div class="media-body">
-                    <h5 class="mt-0"><%= comment.author.username %></h5>
-                    <p><%= comment.body %></p>
-                  </div>
-                </div>
-              </div>
-            </li>
-          <% end %>
-        </ul>
-        <div class="card-body">
-         <%= render "comments/form", comment: Comment.new %>
-        </div>
-      </div>
-    </div>
-  </div>
+  <%= render "photos/photo", photo: photo %>
 <% end %>

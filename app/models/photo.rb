@@ -22,11 +22,16 @@
 class Photo < ApplicationRecord
   mount_uploader :image, ImageUploader
   belongs_to :owner, class_name: "User", counter_cache: true
-
+   scope :latest, -> { order(created_at: :desc) }
   has_many :comments
   has_many :likes
   has_many :fans, through: :likes
 
   validates :caption , presence: true
   validates :image , presence: true
+
+  def liked_by?(user)
+  fans.exists?(user.id)
+end
+
 end
