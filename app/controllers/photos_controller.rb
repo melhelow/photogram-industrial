@@ -8,6 +8,7 @@ class PhotosController < ApplicationController
 
   # GET /photos/1 or /photos/1.json
   def show
+    @user = @photo.owner
   end
 
   # GET /photos/new
@@ -17,6 +18,7 @@ class PhotosController < ApplicationController
 
   # GET /photos/1/edit
   def edit
+    @user = @photo.owner
   end
 
   # POST /photos or /photos.json

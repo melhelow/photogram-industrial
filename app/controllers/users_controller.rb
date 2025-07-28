@@ -10,7 +10,13 @@ class UsersController < ApplicationController
     end
   end
   def show
+  @user = User.find_by!(username: params[:username])
+
+  if current_user == @user && @user.private?
+    @pending_follow_requests = FollowRequest.where(recipient: @user, status: "pending")
   end
+end
+
 
   def liked
     @liked_photos = @user.liked_photos.includes(:owner)
