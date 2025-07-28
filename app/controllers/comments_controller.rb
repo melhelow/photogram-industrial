@@ -38,9 +38,13 @@ class CommentsController < ApplicationController
   def destroy
     if @comment
       @comment.destroy
-      redirect_to user_feed_path(current_user), notice: "Comment deleted."
+      #redirect_to user_feed_path(current_user), notice: "Comment deleted."
+      redirect_to feed_path(current_user.username), notice: "Comment deleted."
+
     else
-      redirect_to user_feed_path(current_user), alert: "Comment not found."
+     # redirect_to user_feed_path(current_user), alert: "Comment not found."
+     redirect_to feed_path(current_user.username), alert: "Comment not found."
+
     end
   end
 
