@@ -52,7 +52,19 @@ class FollowRequestsController < ApplicationController
     @follow_request.destroy!
 
     respond_to do |format|
-      format.html { redirect_to follow_requests_path, status: :see_other, notice: "Follow request was successfully destroyed." }
+      #format.html { redirect_to follow_requests_path, status: :see_other, notice: "Follow request was successfully destroyed." }
+      #format.html { redirect_to follow_requests_path, notice: "Follow request was successfully destroyed." }
+
+                format.html do
+            redirect_to user_profile_path(@follow_request.recipient.username),
+                        notice: "Follow request was successfully destroyed."
+          end
+
+      
+      
+
+
+      format.html { redirect_back fallback_location: root_path, status: :see_other, notice: "Follow request was successfully destroyed." }
       format.json { head :no_content }
     end
   end

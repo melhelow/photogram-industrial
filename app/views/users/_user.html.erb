@@ -100,23 +100,44 @@
       </div>
     </div>
 
-    <div class="row mb-4">
+   <!-- <div class="row mb-4">
       <div class="col">
-        <% follow_request = current_user.sent_follow_requests.find_by(recipient: @user) %>
-        <% if follow_request %>
-          <%= link_to follow_request, method: :delete, class: "btn btn-outline-secondary btn-block" do %>
-            <% if follow_request.pending? %>
-              Un-request
+        <%# follow_request = current_user.sent_follow_requests.find_by(recipient: @user) %>-->
+        <%# if follow_request %>
+          <%#= link_to follow_request, method: :delete, class: "btn btn-outline-secondary btn-block" do %>
+            <%# if follow_request.pending? %>
+<!--              Un-request
               
-            <% else %>
-              Un-follow
-            <% end %>
-          <% end %>
-        <% else %>
-          <%= render "follow_requests/form", follow_request: @user.received_follow_requests.build %>
-        <% end %>
-      </div>
-    </div>
+            <%# else %>-->
+<!--              Un-follow-->
+            <%# end %>
+          <%# end %>
+        <%# else %>
+          <%#= render "follow_requests/form", follow_request: @user.received_follow_requests.build %>
+        <%# end %>
+<!--      </div>
+    </div>-->
+    <div class="row mb-4">
+  <div class="col">
+    <%# follow_request = current_user.sent_follow_requests.find_by(recipient: @user) %>
+<!---->
+    <%# if follow_request %>
+      <%#= button_to follow_request_path(follow_request),
+                    method: :delete,
+                    class: "btn btn-outline-secondary btn-block",
+                    data: { turbo: false } do %>
+        <%#= follow_request.pending? ? "Un-request" : "Un-follow" %>
+      <%# end %>
+    <%# else %>
+      <%#= render "follow_requests/form", follow_request: current_user.sent_follow_requests.build(recipient: @user) %>
+    <%# end %>
+
+    
+
+    
+  </div>
+</div>
+
 
     <h3 class="h5">
       <%= user.name %>

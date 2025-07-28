@@ -12,8 +12,11 @@
           <%= button_to "Un-like", photo_like_path(photo, current_user.likes.find_by(photo: photo)), method: :delete, class: "btn btn-outline-danger btn-sm me-2" %>
         <% else %>
           <%= button_to "Like", photo_likes_path(photo), method: :post, class: "btn btn-outline-primary btn-sm me-2" %>
+          
         <% end %>
-
+          <%= link_to edit_photo_path(photo), class: "btn btn-link btn-sm text-muted" do %>
+            <i class="fas fa-edit fa-fw"></i>
+          <% end %>
         <!-- Delete photo button (only for owner) -->
         <% if current_user == photo.owner %>
           <%= button_to photo_path(photo), method: :delete, data: { confirm: "Are you sure you want to delete this photo?" }, class: "btn btn-link btn-sm text-danger" do %>
