@@ -20,8 +20,9 @@ class FollowRequestsController < ApplicationController
   end
 
   # POST /follow_requests or /follow_requests.json
-  def create
+ def create
     @follow_request = FollowRequest.new(follow_request_params)
+    @follow_request.sender = current_user
 
     respond_to do |format|
       if @follow_request.save
@@ -33,6 +34,7 @@ class FollowRequestsController < ApplicationController
       end
     end
   end
+
 
   # PATCH/PUT /follow_requests/1 or /follow_requests/1.json
   def update
@@ -49,25 +51,17 @@ class FollowRequestsController < ApplicationController
 
   # DELETE /follow_requests/1 or /follow_requests/1.json
   def destroy
-    @follow_request.destroy!
+  @follow_request.destroy!
 
-    respond_to do |format|
-      #format.html { redirect_to follow_requests_path, status: :see_other, notice: "Follow request was successfully destroyed." }
-      #format.html { redirect_to follow_requests_path, notice: "Follow request was successfully destroyed." }
-
-                format.html do
-            redirect_to user_profile_path(@follow_request.recipient.username),
-                        notice: "Follow request was successfully destroyed."
-          end
-
-      
-      
-
-
-      format.html { redirect_back fallback_location: root_path, status: :see_other, notice: "Follow request was successfully destroyed." }
-      format.json { head :no_content }
+  respond_to do |format|
+    format.html do
+      redirect_to user_profile_path(@follow_request.recipient.username),
+                  notice: "Follow request was successfully destroyed."
     end
+    format.json { head :no_content }
   end
+end
+
 
   private
     # Use callbacks to share common setup or constraints between actions.
@@ -77,6 +71,6 @@ class FollowRequestsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def follow_request_params
-      params.expect(follow_request: [ :recipient_id, :sender_id, :status ])
+      params.require(follow_request: [ :recipient_id, :sender_id, :status ])
     end
 end
