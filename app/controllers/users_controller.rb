@@ -1,6 +1,14 @@
 class UsersController < ApplicationController
   before_action :find_user, only: [:show, :liked, :feed, :discover]
 
+    def index
+    if params[:q] && params[:q][:username_cont].present?
+      search_term = params[:q][:username_cont].downcase
+      @users = User.where("LOWER(username) LIKE ?", "%#{search_term}%")
+    else
+      @users = User.none
+    end
+  end
   def show
   end
 

@@ -1,6 +1,7 @@
 class FollowRequest < ApplicationRecord
   # Possible status values: 'pending', 'accepted', 'rejected' (adjust as needed)
   
+  
   # Scopes
   scope :pending, -> { where(status: 'pending') }
   scope :accepted, -> { where(status: 'accepted') }
@@ -23,4 +24,5 @@ class FollowRequest < ApplicationRecord
 
   
   # Validations, enums, or other logic here if needed
+  
 end

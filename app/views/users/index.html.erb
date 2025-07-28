@@ -1,16 +1,45 @@
-<ul class="list-group list-group-flush">
-  <% @users.each do |user| %>
-    <li class="list-group-item list-group-item-action">
+<!--<ul class="list-group list-group-flush">-->
+  <%# @users.each do |user| %>
+<!--    <li class="list-group-item list-group-item-action">
       <div class="d-flex">
         <div class="flex-shrink-0">
-          <%= image_tag user.avatar_image_url, class: "me-3 rounded-circle border border-1 img-cover img-large" %>
-        </div>
+          <%#= image_tag user.avatar_image_url, class: "me-3 rounded-circle border border-1 img-cover img-large" %>-->
+<!--        </div>
         <div class="flex-grow-1 ms-3">
           <div class="">
-            <h5 class="mt-0"><%= link_to user.username, user_path(user.username), class: "text-decoration-none stretched-link" %></h5>
+            <h5 class="mt-0"><%#= link_to user.username, user_path(user.username), class: "text-decoration-none stretched-link" %></h5>
         </div>
-        <p><%= user.bio %></p>
+        <p><%#= user.bio %></p>
       </div>
     </li>
+  <%# end %>-->
+<!--</ul>
+-->
+<%# app/views/users/index.html.erb %>
+<div class="container">
+  <h1 class="my-4">Search Results</h1>
+  
+  <% if @users.any? %>
+    <div class="list-group">
+      <% @users.each do |user| %>
+        <%= link_to user_path(user.username), class: "list-group-item list-group-item-action" do %>
+          <div class="d-flex align-items-center">
+            <% if user.avatar.attached? %>
+              <%= image_tag user.avatar, class: "rounded-circle me-3", width: 50, height: 50 %>
+            <% else %>
+              <div class="bg-secondary rounded-circle me-3" style="width: 50px; height: 50px"></div>
+            <% end %>
+            <div>
+              <h5 class="mb-0"><%= user.username %></h5>
+              <p class="mb-0 text-muted"><%= user.full_name %></p>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="alert alert-info">
+      No users found matching "<strong><%= params.dig(:q, :username_cont) %></strong>"
+    </div>
   <% end %>
-</ul>
+</div>

@@ -1,5 +1,5 @@
 class PhotosController < ApplicationController
-  before_action :set_photo, only: %i[ show edit update destroy ]
+    before_action :set_photo, only: %i[ show edit update destroy ]
 
   # GET /photos or /photos.json
   def index
@@ -61,12 +61,16 @@ end
 
   private
     # Use callbacks to share common setup or constraints between actions.
-    def set_photo
-      @photo = Photo.find(params.expect(:id))
-    end
+     def set_photo
+    # pulls the :id out of params (as a String) and finds the Photo
+    @photo = Photo.find(params[:id])
+  end
 
     # Only allow a list of trusted parameters through.
-    def photo_params
-      params.expect(photo: [ :image, :comments_count, :likes_count, :caption, :owner_id ])
-    end
+     def photo_params
+    # require the top‐level :photo key, and then permit the individual attributes
+    params
+      .require(:photo)
+      .permit(:image, :comments_count, :likes_count, :caption, :owner_id)
+  end
 end

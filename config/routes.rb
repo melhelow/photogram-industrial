@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   root "photos#index"
   devise_for :users
-  
+  resources :users, only: [:index]
   resources :likes
   resources :follow_requests
   resources :comments
@@ -19,6 +19,7 @@ Rails.application.routes.draw do
   get "search" => "users#search", as: :search_users
 
    devise_scope :user do
-    get '/users/sign_out' => 'devise/sessions#destroy' # Add this line
+    get '/users/sign_out' => 'devise/sessions#destroy' 
+   
   end
 end
