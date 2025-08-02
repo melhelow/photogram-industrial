@@ -79,7 +79,10 @@ gem "strip_attributes"
 gem "validate_url"
 
 group :development do
-  gem "annotaterb"
+  gem "annotaterb", group: [:development]
+
+
+  
   gem "better_errors"
   gem "binding_of_caller"
   gem "dev_toolbar", "~> 2.1.0"
