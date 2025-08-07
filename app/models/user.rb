@@ -64,6 +64,7 @@ class User < ApplicationRecord
   validates :username, presence: true, uniqueness: true
 
   # Scopes
-  scope :past_week, -> { where(created_at: 1.week.ago...) }
+  
   scope :by_likes, -> { order(likes_count: :desc) }
+   
 end
