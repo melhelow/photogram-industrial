@@ -1,15 +1,34 @@
+require_relative '../config/boot'
+require_relative '../config/application'
+Rails.application.require_environment!
+
 desc "Fill the database tables with some sample data"
-task sample_data: :environment do
+task :sample_data do
   starting = Time.now
 
   # Clean up existing uploaded files
   FileUtils.rm_rf(Rails.root.join("public", "uploads"))
 
-  FollowRequest.destroy_all
-  Comment.destroy_all
-  Like.destroy_all
-  Photo.destroy_all
-  User.destroy_all
+  # Safely destroy records if associations exist
+  if defined?(FollowRequest)
+    FollowRequest.destroy_all
+  end
+
+  if defined?(Comment)
+    Comment.destroy_all
+  end
+
+  if defined?(Like)
+    Like.destroy_all
+  end
+
+  if defined?(Photo)
+    Photo.destroy_all
+  end
+
+  if defined?(User)
+    User.destroy_all
+  end
 
   people = Array.new(10) do
     {
@@ -28,10 +47,14 @@ task sample_data: :environment do
     username = person.fetch(:first_name).downcase
     secret = false
 
-    if ["alice", "carol"].include?(username) || User.where(private: true).count <= 6
+    if ["alice", "carol"].include?(username) 
       secret = true
     end
 
+    # Use safe avatar path
+    avatar_number = rand(1..10)
+    avatar_path = "#{Rails.root}/public/avatars/#{avatar_number}.jpeg"
+    
     user = User.create(
       email: "#{username}@example.com",
       password: "password",
@@ -44,7 +67,7 @@ task sample_data: :environment do
       ),
       website: Faker::Internet.url,
       private: secret,
-      avatar_image: File.open("#{Rails.root}/public/avatars/#{rand(1..10)}.jpeg")
+      avatar_image: File.exist?(avatar_path) ? File.open(avatar_path) : nil
     )
   end
 
@@ -52,46 +75,50 @@ task sample_data: :environment do
 
   users.each do |first_user|
     users.each do |second_user|
+      next if first_user == second_user
+      
       if rand < 0.75
         status = "accepted"
-        if second_user.private?
+        if second_user.private? && rand < 0.5
           status = "pending"
         end
-        first_user_follow_request = first_user.sent_follow_requests.create(
+        
+        first_user.sent_follow_requests.create(
           recipient: second_user,
           status: status
-        )
-      end
-
-      if rand < 0.75
-        status = "accepted"
-        if first_user.private?
-          status = "pending"
-        end
-        second_user_follow_request = second_user.sent_follow_requests.create(
-          recipient: first_user,
-          status: status
-        )
+        ) if first_user.respond_to?(:sent_follow_requests)
       end
     end
   end
 
+  # Modified photo creation section
   users.each do |user|
     rand(15).times do
-      photo = user.own_photos.create(
+      # Use safe photo path
+      photo_number = rand(1..10)
+      photo_path = "#{Rails.root}/public/photos/#{photo_number}.jpeg"
+      
+      photo = Photo.create(
         caption: Faker::Quote.jack_handey,
-        image: File.open("#{Rails.root}/public/photos/#{rand(1..10)}.jpeg")
+        image: File.exist?(photo_path) ? File.open(photo_path) : nil,
+        owner: user
       )
 
-      user.followers.each do |follower|
+      # Use a random subset of users for likes and comments
+      random_users = users.sample(rand(users.count))
+      
+      random_users.each do |random_user|
+        # Create likes
         if rand < 0.5
-          photo.fans << follower
+          Like.create(photo: photo, fan: random_user)
         end
 
+        # Create comments
         if rand < 0.25
-          comment = photo.comments.create(
+          Comment.create(
             body: Faker::Quote.jack_handey,
-            author: follower
+            author: random_user,
+            photo: photo
           )
         end
       end
@@ -99,10 +126,10 @@ task sample_data: :environment do
   end
 
   ending = Time.now
-  p "It took #{(ending - starting).to_i} seconds to create sample data."
-  p "There are now #{User.count} users."
-  p "There are now #{FollowRequest.count} follow requests."
-  p "There are now #{Photo.count} photos."
-  p "There are now #{Like.count} likes."
-  p "There are now #{Comment.count} comments."
+  puts "It took #{(ending - starting).to_i} seconds to create sample data."
+  puts "There are now #{User.count} users."
+  puts "There are now #{FollowRequest.count} follow requests." if defined?(FollowRequest)
+  puts "There are now #{Photo.count} photos."
+  puts "There are now #{Like.count} likes." if defined?(Like)
+  puts "There are now #{Comment.count} comments." if defined?(Comment)
 end
