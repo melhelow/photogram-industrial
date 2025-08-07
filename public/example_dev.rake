@@ -34,7 +34,7 @@ task sample_data: :environment do
 
     user = User.create(
       email: "#{username}@example.com",
-      password: "appdev",
+      password: "password",
       username: username.downcase,
       name: "#{person[:first_name]} #{person[:last_name]}",
       bio: Faker::Lorem.paragraph(
