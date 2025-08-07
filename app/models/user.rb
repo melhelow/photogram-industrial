@@ -70,8 +70,6 @@ class User < ApplicationRecord
   scope :by_likes, -> { order(likes_count: :desc) }
 
   # Returns users this user has sent pending follow requests to
-def pending
-  pending_sent_follow_requests.map(&:recipient)
-end
+has_many :pending, through: :pending_received_follow_requests, source: :sender
 
 end

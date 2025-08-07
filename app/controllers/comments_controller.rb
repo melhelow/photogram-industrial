@@ -1,5 +1,5 @@
 class CommentsController < ApplicationController
-  before_action :authenticate_user!
+ 
   before_action :set_comment, only: %i[ show edit update destroy ]
 
   def index
@@ -29,7 +29,7 @@ class CommentsController < ApplicationController
 
   def update
     if @comment.update(comment_params)
-      redirect_to @comment, notice: "Comment was successfully updated."
+      redirect_back fallback_location: root_path, notice: "Comment was successfully updated."
     else
       render :edit, status: :unprocessable_entity
     end

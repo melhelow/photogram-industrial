@@ -1,5 +1,5 @@
 class PhotosController < ApplicationController
-    before_action :set_photo, only: %i[ show edit update destroy ]
+  before_action :set_photo, only: %i[ show edit update destroy ]
 
   # GET /photos or /photos.json
   def index
@@ -35,7 +35,7 @@ end
 
 
   # PATCH/PUT /photos/1 or /photos/1.json
-  def update
+def update
     respond_to do |format|
       if @photo.update(photo_params)
         format.html { redirect_to @photo, notice: "Photo was successfully updated." }

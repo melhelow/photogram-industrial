@@ -56,7 +56,7 @@ class FollowRequestsController < ApplicationController
   respond_to do |format|
     format.html do
       redirect_to user_profile_path(@follow_request.recipient.username),
-                  notice: "Follow request was successfully destroyed."
+      notice: "Follow request was successfully destroyed."
     end
     format.json { head :no_content }
   end
