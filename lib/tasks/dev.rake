@@ -1,3 +1,5 @@
+
+
 desc "Fill the database tables with some sample data"
 task sample_data: :environment do
   starting = Time.now
@@ -34,6 +36,8 @@ task sample_data: :environment do
 
     user = User.create(
       email: "#{username}@example.com",
+
+
 
       password: "appdev",
 
