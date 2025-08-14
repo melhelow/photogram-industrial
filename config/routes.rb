@@ -21,7 +21,7 @@ Rails.application.routes.draw do
   get "search" => "users#search", as: :search_users
 
    devise_scope :user do
-    get '/users/sign_out' => 'devise/sessions#destroy' 
+    delete '/users/sign_out' => 'devise/sessions#destroy' 
    
   end
 end
